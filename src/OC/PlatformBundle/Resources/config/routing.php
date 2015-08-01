@@ -11,6 +11,23 @@ $collection->add('oc_platform_homepage', new Route('/hello/{name}', array(
 $collection->add('wah', new Route('/wa', array(
     '_controller' => 'OCPlatformBundle:Advert:view',
 )));
+
+$collection->add('carnet', new Route('/inscr', array(
+    '_controller' => 'OCPlatformBundle:Carnet:index',
+)));
+$collection->add('inscr', new Route('/trait', array(
+    '_controller' => 'OCPlatformBundle:Carnet:inscr',
+)));
+$collection->add('home', new Route('/home', array(
+    '_controller' => 'OCPlatformBundle:Carnet:home',
+)));
+$collection->add('co', new Route('/login', array(
+    '_controller' => 'OCPlatformBundle:Carnet:login',
+)));
+$collection->add('cogrant', new Route('/grant', array(
+    '_controller' => 'OCPlatformBundle:Carnet:grant',
+)));
+
 $collection->add('hello_the_world', new Route('/hello-world', array(
     '_controller' => 'OCPlatformBundle:Advert:index',
 )));
