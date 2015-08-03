@@ -1,0 +1,19 @@
+{# src/OC/PlatformBundle/Resources/view/Advert/view.html.twig #}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Carnet</title>
+  </head>
+  <body>
+	<h1>Carnet</h1>
+	
+	<ul>
+  {% for amis in data.listsimple %}
+    <li>{{ amis }}:{{data.listall[amis]}}</li>
+  {% else %}
+    <li>Pas d'amis trouvé.</li>
+  {% endfor %}
+  </ul>
+  </body>
+</html>

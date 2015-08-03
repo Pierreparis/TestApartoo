@@ -62,6 +62,31 @@ class CarnetController extends Controller
 	}
 
   }
+  public function carnetAction(Request $request)
+  {
+	$session = $request->getSession();
+	$login = $session->get('userinfos')['login'];
+	$pw = $session->get('userinfos')['mp'];
+	if(null!==$session->get('userinfos')){
+		$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');
+		$reponse = $bdd->query("SELECT amis FROM user WHERE login='$login' AND mp ='$pw'");
+		$donnees = $reponse->fetch();
+		$data = array('listsimple'=>explode(",",$donnees[0]),'listall'=>array());
+		foreach(explode(",",$donnees[0])as $ami){
+			$amir = $bdd->query("SELECT * FROM user WHERE login='$ami'");
+			$amid = json_encode($amir->fetch());
+			$data['listall'] = array_merge($data['listall'],array_fill_keys ( array($ami) , $amid ));			
+		}
+		return $this->render(
+		  'OCPlatformBundle:Carnet:carnet.html.twig',
+		  array('data'=>$data)
+		);
+	}
+	else{
+		return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/login');
+	}
+
+  }
   public function handlemodAction(Request $request)
   {
 	$session = $request->getSession();

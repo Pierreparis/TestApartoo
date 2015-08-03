@@ -36,6 +36,9 @@ $collection->add('hmod', new Route('/hmod', array(
 $collection->add('logout', new Route('/logout', array(
     '_controller' => 'OCPlatformBundle:Carnet:logout',
 )));
+$collection->add('carnet', new Route('/carnet', array(
+    '_controller' => 'OCPlatformBundle:Carnet:carnet',
+)));
 
 $collection->add('hello_the_world', new Route('/hello-world', array(
     '_controller' => 'OCPlatformBundle:Advert:index',
