@@ -17,12 +17,41 @@ class CarnetController extends Controller
 		  array()
 		);
     }
-    public function loginAction()
+    public function loginAction(Request $request)
     {
-		return $this->render(
-		  'OCPlatformBundle:Carnet:login.html.twig',
-		  array()
-		);
+		$session = $request->getSession();
+		if(null!==$session->get('userinfos')){
+			return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/home');
+		}
+		else{
+			return $this->render(
+			  'OCPlatformBundle:Carnet:login.html.twig',
+			  array()
+			);
+		}
+    }
+    public function addamiAction(Request $request)
+    {
+		$session = $request->getSession();
+		if(null!==$session->get('userinfos')){
+			$login = $session->get('userinfos')['login'];
+			$pw = $session->get('userinfos')['mp'];
+			$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');
+			$reponse = $bdd->query("SELECT amis FROM user WHERE login='$login' AND mp ='$pw'");
+			$r=$reponse->fetch()[0];
+			$upd = $r.",".$_GET['ami'];
+			$no =true;
+			foreach(explode(",",$r) as $e){
+				if($e ==$_GET['ami']){$no =false;}
+			}
+			if($no!=false){
+			$bdd->exec("UPDATE user SET amis='$upd'  WHERE mp='$pw'AND login='$login'");
+			}
+			return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/carnet?'.$no);
+		}
+		else{
+			return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/login');
+		}
     }
     public function logoutAction(Request $request)
     {

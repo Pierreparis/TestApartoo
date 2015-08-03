@@ -39,6 +39,9 @@ $collection->add('logout', new Route('/logout', array(
 $collection->add('carnet', new Route('/carnet', array(
     '_controller' => 'OCPlatformBundle:Carnet:carnet',
 )));
+$collection->add('addami', new Route('/addami', array(
+    '_controller' => 'OCPlatformBundle:Carnet:addami',
+)));
 
 $collection->add('hello_the_world', new Route('/hello-world', array(
     '_controller' => 'OCPlatformBundle:Advert:index',
