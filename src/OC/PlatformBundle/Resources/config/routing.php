@@ -12,7 +12,7 @@ $collection->add('wah', new Route('/wa', array(
     '_controller' => 'OCPlatformBundle:Advert:view',
 )));
 
-$collection->add('carnet', new Route('/inscr', array(
+$collection->add('sign', new Route('/inscr', array(
     '_controller' => 'OCPlatformBundle:Carnet:index',
 )));
 $collection->add('inscr', new Route('/trait', array(

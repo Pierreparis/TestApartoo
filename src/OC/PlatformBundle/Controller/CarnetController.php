@@ -39,13 +39,13 @@ class CarnetController extends Controller
 			$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');
 			$reponse = $bdd->query("SELECT amis FROM user WHERE login='$login' AND mp ='$pw'");
 			$r=$reponse->fetch()[0];
-			$ga =$_GET['ami'];
+			$ga =htmlspecialchars ($_GET['ami']);
 			$rep1 = $bdd->query("SELECT * FROM user WHERE login='$ga'");
 			$r1 = $rep1->fetch();
-			$upd = $r.",".$_GET['ami'];
+			$upd = $r.",".htmlspecialchars ($_GET['ami']);
 			$no =true;
 			foreach(explode(",",$r) as $e){
-				if($e ==$_GET['ami']){$no =false;}
+				if($e ==htmlspecialchars ($_GET['ami'])){$no =false;}
 			}
 			if($no!=false&&$r1!=false){
 			$bdd->exec("UPDATE user SET amis='$upd'  WHERE mp='$pw'AND login='$login'");
@@ -65,7 +65,7 @@ class CarnetController extends Controller
 			$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');
 			$reponse = $bdd->query("SELECT amis FROM user WHERE login='$login' AND mp ='$pw'");
 			$r=$reponse->fetch()[0];
-			$ga =$_GET['ami'];	
+			$ga =htmlspecialchars ($_GET['ami']);	
 			$tab = explode(",",$r);
 			array_splice ( $tab,array_search ( $ga, $tab ),1);
 			$amix='';
@@ -88,8 +88,8 @@ class CarnetController extends Controller
     }	
     public function grantAction(Request $request)
     {
-		$login = $_GET['id'];
-		$pw = $_GET['pw'];		
+		$login = htmlspecialchars ($_GET['id']);
+		$pw = htmlspecialchars ($_GET['pw']);		
 		$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');	
 		$reponse = $bdd->query("SELECT * FROM user WHERE login='$login' AND mp ='$pw'");
 		$donnees = $reponse->fetch();
@@ -109,7 +109,7 @@ class CarnetController extends Controller
 	if(null!==$session->get('userinfos')){
 		return $this->render(
 		  'OCPlatformBundle:Carnet:home.html.twig',
-		  array('data'=>json_encode($session->get('userinfos')))
+		  array('data'=>$session->get('userinfos'))
 		);
 	}
 	else{
@@ -129,7 +129,7 @@ class CarnetController extends Controller
 		$data = array('listsimple'=>explode(",",$donnees[0]),'listall'=>array());
 		foreach(explode(",",$donnees[0])as $ami){
 			$amir = $bdd->query("SELECT * FROM user WHERE login='$ami'");
-			$amid = json_encode($amir->fetch());
+			$amid = $amir->fetch();
 			if($amid){$data['listall'] = array_merge($data['listall'],array_fill_keys ( array($ami) , $amid ));}			
 		}
 		return $this->render(
@@ -147,10 +147,10 @@ class CarnetController extends Controller
 	$session = $request->getSession();
 	$login = $session->get('userinfos')['login'];
 	$pw = $session->get('userinfos')['mp'];
-	$email = $_GET['mail'];
-	$adr = $_GET['adr'];
-	$tel = $_GET['tel'];
-	$site = $_GET['site'];
+	$email = htmlspecialchars ($_GET['mail']);
+	$adr = htmlspecialchars ($_GET['adr']);
+	$tel = htmlspecialchars ($_GET['tel']);
+	$site = htmlspecialchars ($_GET['site']);
 	$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');
 	$bdd->exec("UPDATE user SET email = '$email' , adr = '$adr' , tel = '$tel',site ='$site'  WHERE mp='$pw'AND login='$login'");
 	$reponse = $bdd->query("SELECT * FROM user WHERE login='$login' AND mp ='$pw'");
@@ -183,23 +183,30 @@ class CarnetController extends Controller
   }
 	public function inscrAction(Request $request)
 	{
-		$login = $_GET['id'];
-		$pw = $_GET['pw'];
-		$email = $_GET['mail'];
-		$adr = $_GET['adr'];
-		$tel = $_GET['tel'];
-		$site = $_GET['site'];
+		$login = htmlspecialchars ($_GET['id']);
+		$pw = htmlspecialchars ($_GET['pw']);
+		$email = htmlspecialchars ($_GET['mail']);
+		$adr = htmlspecialchars ($_GET['adr']);
+		$tel = htmlspecialchars ($_GET['tel']);
+		$site = htmlspecialchars ($_GET['site']);
 		try
 		{
 		$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');			
-		$bdd->exec("INSERT INTO user VALUES('$login','$pw','$email','$adr','$tel','$site','')");
+		$i = $bdd->exec("INSERT INTO user VALUES('$login','$pw','$email','$adr','$tel','$site','')");
 		$session = $request->getSession();
-	    $session->set('userinfos',$_GET );	
+	    $session->set('userinfos', array_merge($_GET,array('login'=>$login,'email'=>$email,'amis'=>'')) );	
 		}
 		catch (Exception $e)
 		{
-				die('Erreur : ' . $e->getMessage());
-		}	
-		return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/home');
+				return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/login');
+		}
+		if($i){
+		return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/home?'.$i);
+		}
+		else{
+			$session->remove('userinfos');
+			$session->invalidate();
+			return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/login');
+		}
 	}
 }

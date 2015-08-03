@@ -1,22 +1,90 @@
 {# src/OC/PlatformBundle/Resources/view/Advert/view.html.twig #}
 
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>Carnet</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+
+	<link href="http://getbootstrap.com/examples/starter-template/starter-template.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
   </head>
+
   <body>
-	<h1>Carnet</h1>
-	
-	<ul>
-  {% for amis in data.listsimple %}
-    {% if amis != '' %}<li>{{ amis }}:{{data.listall[amis]}}</li><a href='del?ami={{amis}}'>Supprimer</a>
-  {% else %}{% endif %}
-  {% endfor %}
-  </ul>
-  	<form action="addami" method='get'>
-	<label for='id'>identifiant ami : </label><input  name='ami' type='text' />
-	<input type='submit' value='Ajouter' />
-	</form>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Test symfony apartoo</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li ><a href="home">Home</a></li>
+            <li class="active"><a href="carnet">Carnet</a></li>
+            <li><a href="mod">Modifier profil</a></li>
+			<li><a href="logout">Déconnexion</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div class="starter-template">
+			<form action="addami" method='get'>
+			<label for='id'>identifiant ami : </label><input  name='ami' type='text' />
+			<input type='submit' value='Ajouter' />
+			</form>
+			<h1>Carnet</h1>
+			<table class='table'>
+				<thead>
+					<th>Pseudo</th>
+					<th>Email</th>
+					<th>Adresse</th>
+					<th>Téléphone</th>
+					<th>Site</th>
+					<th></th>
+				</thead>
+				<tbody>
+				  {% for amis in data.listsimple %}
+					{% if amis != '' %}
+					<tr>
+					<td>{{ amis }}</td>
+					<td>{{ data.listall[amis]['email']}}</td>
+					<td>{{ data.listall[amis]['adr']}}</td>
+					<td>{{ data.listall[amis]['tel']}}</td>
+					<td>{{ data.listall[amis]['site']}}</td>
+					<td><a href='del?ami={{amis}}'>Supprimer</a></td>
+					</tr>
+				  {% else %}{% endif %}
+				  {% endfor %}				
+				</tbody>
+			</table>
+
+	</div>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://getbootstrap.com/dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>
