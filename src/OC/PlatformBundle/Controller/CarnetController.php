@@ -23,6 +23,13 @@ class CarnetController extends Controller
 		  'OCPlatformBundle:Carnet:login.html.twig',
 		  array()
 		);
+    }
+    public function logoutAction(Request $request)
+    {
+		$session = $request->getSession();
+		$session->remove('userinfos');
+		$session->invalidate();
+		return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/login');
     }	
     public function grantAction(Request $request)
     {
@@ -44,7 +51,55 @@ class CarnetController extends Controller
   public function homeAction(Request $request)
   {
 	$session = $request->getSession();
-    return new Response("home yo ".json_encode($session->get('userinfos')));
+	if(null!==$session->get('userinfos')){
+		return $this->render(
+		  'OCPlatformBundle:Carnet:home.html.twig',
+		  array('data'=>json_encode($session->get('userinfos')))
+		);
+	}
+	else{
+		return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/login');
+	}
+
+  }
+  public function handlemodAction(Request $request)
+  {
+	$session = $request->getSession();
+	$login = $session->get('userinfos')['login'];
+	$pw = $session->get('userinfos')['mp'];
+	$email = $_GET['mail'];
+	$adr = $_GET['adr'];
+	$tel = $_GET['tel'];
+	$site = $_GET['site'];
+	$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');
+	$bdd->exec("UPDATE user SET email = '$email' , adr = '$adr' , tel = '$tel',site ='$site'  WHERE mp='$pw'AND login='$login'");
+	$reponse = $bdd->query("SELECT * FROM user WHERE login='$login' AND mp ='$pw'");
+	$donnees = $reponse->fetch();
+	if($donnees==false){
+		return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/login');
+	}
+	else{
+		$session->set('userinfos',$donnees);	
+		return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/home');
+	}
+  }
+  public function modAction(Request $request)
+  {
+	$session = $request->getSession();
+	$login = $session->get('userinfos')['login'];
+	$pw = $session->get('userinfos')['mp'];		
+	$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');	
+	$reponse = $bdd->query("SELECT * FROM user WHERE login='$login' AND mp ='$pw'");
+	$donnees = $reponse->fetch();
+	if($donnees==false){
+		return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/login');
+	}
+	else{	
+		return $this->render(
+		  'OCPlatformBundle:Carnet:mod.html.twig',
+		  array('data'=>$session->get('userinfos'))
+		);
+	}
   }
 	public function inscrAction(Request $request)
 	{

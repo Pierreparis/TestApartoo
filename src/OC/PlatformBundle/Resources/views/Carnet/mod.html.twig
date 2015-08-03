@@ -1,0 +1,18 @@
+{# src/OC/PlatformBundle/Resources/view/Advert/view.html.twig #}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Carnet</title>
+  </head>
+  <body>
+	<h1>Modifier</h1>
+	<form action="hmod" method='get'>
+	<label for='id'>email : </label><input value={{data.email}} name='mail' type='email' />
+	<label for='pw'>adresse : </label><input value={{data.adr}} type="text" name='adr' />
+	<label for='id'>téléphone : </label><input name='tel' value={{data.tel}} type='text' />
+	<label for='pw'>site : </label><input type="text" name='site' value={{data.site}} />
+	<input type='submit' value='valider' />
+	</form>
+  </body>
+</html>

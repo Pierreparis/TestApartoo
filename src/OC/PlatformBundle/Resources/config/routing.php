@@ -27,6 +27,15 @@ $collection->add('co', new Route('/login', array(
 $collection->add('cogrant', new Route('/grant', array(
     '_controller' => 'OCPlatformBundle:Carnet:grant',
 )));
+$collection->add('mod', new Route('/mod', array(
+    '_controller' => 'OCPlatformBundle:Carnet:mod',
+)));
+$collection->add('hmod', new Route('/hmod', array(
+    '_controller' => 'OCPlatformBundle:Carnet:handlemod',
+)));
+$collection->add('logout', new Route('/logout', array(
+    '_controller' => 'OCPlatformBundle:Carnet:logout',
+)));
 
 $collection->add('hello_the_world', new Route('/hello-world', array(
     '_controller' => 'OCPlatformBundle:Advert:index',
