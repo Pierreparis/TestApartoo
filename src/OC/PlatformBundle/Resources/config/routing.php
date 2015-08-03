@@ -42,6 +42,9 @@ $collection->add('carnet', new Route('/carnet', array(
 $collection->add('addami', new Route('/addami', array(
     '_controller' => 'OCPlatformBundle:Carnet:addami',
 )));
+$collection->add('delami', new Route('/del', array(
+    '_controller' => 'OCPlatformBundle:Carnet:delami',
+)));
 
 $collection->add('hello_the_world', new Route('/hello-world', array(
     '_controller' => 'OCPlatformBundle:Advert:index',

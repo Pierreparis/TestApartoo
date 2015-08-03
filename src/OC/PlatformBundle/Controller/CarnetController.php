@@ -39,15 +39,41 @@ class CarnetController extends Controller
 			$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');
 			$reponse = $bdd->query("SELECT amis FROM user WHERE login='$login' AND mp ='$pw'");
 			$r=$reponse->fetch()[0];
+			$ga =$_GET['ami'];
+			$rep1 = $bdd->query("SELECT * FROM user WHERE login='$ga'");
+			$r1 = $rep1->fetch();
 			$upd = $r.",".$_GET['ami'];
 			$no =true;
 			foreach(explode(",",$r) as $e){
 				if($e ==$_GET['ami']){$no =false;}
 			}
-			if($no!=false){
+			if($no!=false&&$r1!=false){
 			$bdd->exec("UPDATE user SET amis='$upd'  WHERE mp='$pw'AND login='$login'");
 			}
 			return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/carnet?'.$no);
+		}
+		else{
+			return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/login');
+		}
+    }
+    public function delamiAction(Request $request)
+    {
+		$session = $request->getSession();
+		if(null!==$session->get('userinfos')){
+			$login = $session->get('userinfos')['login'];
+			$pw = $session->get('userinfos')['mp'];
+			$bdd = new PDO('mysql:host=localhost;dbname=test;charset=utf8', 'root', '');
+			$reponse = $bdd->query("SELECT amis FROM user WHERE login='$login' AND mp ='$pw'");
+			$r=$reponse->fetch()[0];
+			$ga =$_GET['ami'];	
+			$tab = explode(",",$r);
+			array_splice ( $tab,array_search ( $ga, $tab ),1);
+			$amix='';
+			foreach($tab as $t){
+				$amix = $t.",".$amix;
+			}
+			$ok=$bdd->exec("UPDATE user SET amis='$amix'  WHERE mp='$pw'AND login='$login'");
+			return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/carnet?'.$ok);
 		}
 		else{
 			return new RedirectResponse('http://localhost/Symfony/web/app_dev.php/login');
@@ -104,7 +130,7 @@ class CarnetController extends Controller
 		foreach(explode(",",$donnees[0])as $ami){
 			$amir = $bdd->query("SELECT * FROM user WHERE login='$ami'");
 			$amid = json_encode($amir->fetch());
-			$data['listall'] = array_merge($data['listall'],array_fill_keys ( array($ami) , $amid ));			
+			if($amid){$data['listall'] = array_merge($data['listall'],array_fill_keys ( array($ami) , $amid ));}			
 		}
 		return $this->render(
 		  'OCPlatformBundle:Carnet:carnet.html.twig',
@@ -157,7 +183,6 @@ class CarnetController extends Controller
   }
 	public function inscrAction(Request $request)
 	{
-		print_r($_GET);
 		$login = $_GET['id'];
 		$pw = $_GET['pw'];
 		$email = $_GET['mail'];

@@ -10,9 +10,8 @@
 	
 	<ul>
   {% for amis in data.listsimple %}
-    <li>{{ amis }}:{{data.listall[amis]}}</li>
-  {% else %}
-    <li>Pas d'amis trouvé.</li>
+    {% if amis != '' %}<li>{{ amis }}:{{data.listall[amis]}}</li><a href='del?ami={{amis}}'>Supprimer</a>
+  {% else %}{% endif %}
   {% endfor %}
   </ul>
   	<form action="addami" method='get'>
